@@ -1,0 +1,2663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MORPHEUS MODS — BG3 Patch 8 Ultimate Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #04030a;
+  --deep: #080612;
+  --card: #0f0b1a;
+  --card2: #130f20;
+  --border: rgba(155, 100, 255, 0.12);
+  --border-hover: rgba(155, 100, 255, 0.4);
+  --gold: #c9a84c;
+  --gold-bright: #f0d080;
+  --gold-dim: #6a5520;
+  --purple: #7b2fff;
+  --purple-bright: #a66fff;
+  --purple-dim: #3a1a70;
+  --crimson: #c0202a;
+  --crimson-bright: #ff4455;
+  --teal: #12b89a;
+  --teal-dim: #0a5545;
+  --text: #ede5d4;
+  --text2: #9a8e7a;
+  --text3: #5a5248;
+  --green: #4ac86a;
+  --amber: #e0a030;
+  --blue: #4a9fff;
+  --shadow-purple: rgba(123, 47, 255, 0.25);
+  --shadow-gold: rgba(201, 168, 76, 0.2);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════ CANVAS BG */
+#bgCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+body > *:not(#bgCanvas) { position: relative; z-index: 1; }
+
+/* ═══════════════════════════════════════ NAV */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2rem;
+  background: rgba(4, 3, 10, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.nav-logo-icon {
+  width: 38px;
+  height: 38px;
+}
+
+.nav-logo-text {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  background: linear-gradient(135deg, var(--purple-bright), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.25rem;
+  list-style: none;
+}
+
+.nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text2);
+  text-decoration: none;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.nav-links a:hover {
+  background: rgba(123, 47, 255, 0.1);
+  color: var(--purple-bright);
+  border-radius: 4px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-search-btn {
+  background: rgba(123, 47, 255, 0.1);
+  border: 1px solid rgba(123, 47, 255, 0.25);
+  color: var(--text2);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nav-search-btn:hover {
+  background: rgba(123, 47, 255, 0.2);
+  color: var(--purple-bright);
+  border-color: var(--purple);
+}
+
+/* ═══════════════════════════════════════ SEARCH OVERLAY */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 3, 10, 0.96);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.search-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.search-box {
+  width: 100%;
+  max-width: 680px;
+  padding: 0 1.5rem;
+}
+
+.search-input-wrap {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.search-input-wrap::before {
+  content: '🔍';
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  opacity: 0.5;
+}
+
+#searchInput {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--purple);
+  border-radius: 6px;
+  padding: 1.1rem 1.5rem 1.1rem 3.5rem;
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.3rem;
+  color: var(--text);
+  outline: none;
+  box-shadow: 0 0 40px rgba(123, 47, 255, 0.2);
+}
+
+#searchInput::placeholder { color: var(--text3); }
+
+#searchResults {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.25rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.15s;
+}
+
+.search-result-item:hover {
+  background: var(--card2);
+  border-color: var(--purple);
+  transform: translateX(4px);
+}
+
+.search-result-cat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  background: rgba(123, 47, 255, 0.2);
+  color: var(--purple-bright);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.search-result-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.88rem;
+  flex: 1;
+}
+
+.search-result-desc {
+  font-size: 0.8rem;
+  color: var(--text2);
+  flex: 2;
+}
+
+.search-close {
+  display: block;
+  text-align: center;
+  margin-top: 1.5rem;
+  color: var(--text3);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════ HERO */
+header {
+  padding: 8rem 2rem 4rem;
+  text-align: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Custom SVG Logo */
+.hero-logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+  animation: floatLogo 6s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.hero-eyeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--purple-bright);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.3s forwards;
+}
+
+.hero-eyeline::before, .hero-eyeline::after {
+  content: '';
+  height: 1px;
+  width: 60px;
+  background: linear-gradient(90deg, transparent, var(--purple));
+}
+.hero-eyeline::after {
+  background: linear-gradient(-90deg, transparent, var(--purple));
+}
+
+h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(2.2rem, 7vw, 5rem);
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  background: linear-gradient(160deg, #ffffff 0%, var(--gold-bright) 30%, var(--gold) 55%, var(--purple-bright) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.05;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.5s forwards;
+}
+
+.hero-sub {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  color: var(--purple-bright);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.7s forwards;
+}
+
+.hero-desc {
+  font-size: 1.1rem;
+  color: var(--text2);
+  font-style: italic;
+  max-width: 580px;
+  margin: 0 auto 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.9s forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 1.1s forwards;
+}
+
+.stat-block {
+  padding: 1.25rem 2.5rem;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+
+.stat-block:last-child { border-right: none; }
+
+.stat-num {
+  font-family: 'Cinzel', serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--gold);
+  display: block;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text3);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.hero-badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s 1.3s forwards;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+.badge-green {
+  background: rgba(74, 200, 106, 0.1);
+  border: 1px solid rgba(74, 200, 106, 0.3);
+  color: var(--green);
+}
+
+.badge-purple {
+  background: rgba(123, 47, 255, 0.12);
+  border: 1px solid rgba(123, 47, 255, 0.3);
+  color: var(--purple-bright);
+}
+
+.badge-gold {
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--gold);
+}
+
+.badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ═══════════════════════════════════════ CREW SECTION */
+.crew-section {
+  padding: 3rem 2rem;
+  border-bottom: 1px solid var(--border);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-eyeline {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--purple-bright);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.section-eyeline::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-hover), transparent);
+}
+
+.crew-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.crew-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transition: all 0.3s;
+}
+
+.crew-card:hover {
+  border-color: var(--purple);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px var(--shadow-purple);
+}
+
+.crew-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              linear-gradient(135deg, var(--purple), var(--gold)) border-box;
+}
+
+.crew-info {
+  flex: 1;
+}
+
+.crew-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 0.2rem;
+}
+
+.crew-alias {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--purple-bright);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.crew-role {
+  font-size: 0.82rem;
+  color: var(--text2);
+}
+
+/* ═══════════════════════════════════════ TRACKER */
+.tracker-section {
+  padding: 2.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.tracker-bar-wrap {
+  background: rgba(123, 47, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+}
+
+.tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tracker-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  color: var(--text2);
+  letter-spacing: 0.1em;
+}
+
+.tracker-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--purple-bright);
+}
+
+.progress-bar {
+  height: 8px;
+  background: rgba(123, 47, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--purple), var(--purple-bright), var(--gold));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.tracker-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 4px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  text-decoration: none;
+}
+
+.btn-purple {
+  background: rgba(123, 47, 255, 0.2);
+  border: 1px solid rgba(123, 47, 255, 0.4);
+  color: var(--purple-bright);
+}
+
+.btn-purple:hover {
+  background: rgba(123, 47, 255, 0.35);
+  box-shadow: 0 4px 20px rgba(123, 47, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-gold {
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  color: var(--gold);
+}
+
+.btn-gold:hover {
+  background: rgba(201, 168, 76, 0.22);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: rgba(192, 32, 42, 0.1);
+  border: 1px solid rgba(192, 32, 42, 0.3);
+  color: #ff6070;
+}
+
+.btn-danger:hover {
+  background: rgba(192, 32, 42, 0.2);
+}
+
+/* ═══════════════════════════════════════ FILTERS */
+.filter-section {
+  padding: 1.5rem 2rem;
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-right: 0.25rem;
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  transition: all 0.2s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  border-color: var(--purple-bright);
+  color: var(--purple-bright);
+  background: rgba(123, 47, 255, 0.1);
+}
+
+.filter-btn.active {
+  font-weight: 700;
+}
+
+.filter-right {
+  margin-left: auto;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.view-toggle {
+  display: flex;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.view-btn {
+  padding: 0.4rem 0.7rem;
+  border: none;
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.view-btn.active, .view-btn:hover {
+  background: rgba(123, 47, 255, 0.15);
+  color: var(--purple-bright);
+}
+
+/* ═══════════════════════════════════════ MOD GRID */
+main {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.category-section {
+  margin-bottom: 3.5rem;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.category-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.cat-foundation .category-icon { background: rgba(74, 200, 106, 0.1); border: 1px solid rgba(74, 200, 106, 0.2); }
+.cat-visual .category-icon { background: rgba(123, 47, 255, 0.12); border: 1px solid rgba(123, 47, 255, 0.25); }
+.cat-gameplay .category-icon { background: rgba(192, 32, 42, 0.1); border: 1px solid rgba(192, 32, 42, 0.25); }
+.cat-classes .category-icon { background: rgba(74, 159, 255, 0.1); border: 1px solid rgba(74, 159, 255, 0.25); }
+.cat-content .category-icon { background: rgba(201, 168, 76, 0.1); border: 1px solid rgba(201, 168, 76, 0.25); }
+.cat-qol .category-icon { background: rgba(18, 184, 154, 0.1); border: 1px solid rgba(18, 184, 154, 0.25); }
+
+.category-title {
+  flex: 1;
+}
+
+.category-title h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.2rem;
+}
+
+.category-title p {
+  font-size: 0.85rem;
+  color: var(--text3);
+  font-style: italic;
+}
+
+.category-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.7rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+/* Grid & List views */
+.mod-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem;
+}
+
+.mod-grid.list-view {
+  grid-template-columns: 1fr;
+}
+
+/* MOD CARD */
+.mod-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.mod-grid.list-view .mod-card {
+  flex-direction: row;
+  align-items: center;
+}
+
+.mod-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 50px rgba(123, 47, 255, 0.12);
+}
+
+.mod-card.installed {
+  border-color: rgba(74, 200, 106, 0.3);
+}
+
+.mod-card.installed:hover {
+  border-color: rgba(74, 200, 106, 0.5);
+  box-shadow: 0 16px 50px rgba(74, 200, 106, 0.08);
+}
+
+.mod-card-accent {
+  height: 3px;
+  background: linear-gradient(90deg, var(--purple-dim), var(--purple-bright));
+  flex-shrink: 0;
+}
+
+.mod-grid.list-view .mod-card-accent {
+  width: 3px;
+  height: auto;
+}
+
+.cat-foundation .mod-card-accent { background: linear-gradient(90deg, #1a5a2a, var(--green)); }
+.cat-visual .mod-card-accent { background: linear-gradient(90deg, var(--purple-dim), var(--purple-bright)); }
+.cat-gameplay .mod-card-accent { background: linear-gradient(90deg, #6a0a12, var(--crimson-bright)); }
+.cat-classes .mod-card-accent { background: linear-gradient(90deg, #1a3a6a, var(--blue)); }
+.cat-content .mod-card-accent { background: linear-gradient(90deg, var(--gold-dim), var(--gold-bright)); }
+.cat-qol .mod-card-accent { background: linear-gradient(90deg, var(--teal-dim), var(--teal)); }
+
+.mod-card-body {
+  padding: 1.25rem 1.4rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.mod-grid.list-view .mod-card-body {
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.mod-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.mod-grid.list-view .mod-card-top {
+  min-width: 240px;
+  flex-shrink: 0;
+}
+
+.mod-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+.mod-install-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border-hover);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--text3);
+  transition: all 0.2s;
+}
+
+.mod-install-btn:hover {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(74, 200, 106, 0.1);
+}
+
+.mod-card.installed .mod-install-btn {
+  border-color: var(--green);
+  background: rgba(74, 200, 106, 0.15);
+  color: var(--green);
+}
+
+.mod-desc {
+  font-size: 0.85rem;
+  color: var(--text2);
+  margin-bottom: 1rem;
+  flex: 1;
+  line-height: 1.5;
+}
+
+.mod-grid.list-view .mod-desc {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.mod-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.mod-grid.list-view .mod-tags {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tag-required { background: rgba(224, 160, 48, 0.12); color: var(--amber); border: 1px solid rgba(224, 160, 48, 0.25); }
+.tag-script { background: rgba(74, 159, 255, 0.1); color: var(--blue); border: 1px solid rgba(74, 159, 255, 0.2); }
+.tag-console { background: rgba(18, 184, 154, 0.1); color: var(--teal); border: 1px solid rgba(18, 184, 154, 0.2); }
+.tag-newsave { background: rgba(192, 32, 42, 0.1); color: #ff6070; border: 1px solid rgba(192, 32, 42, 0.2); }
+.tag-github { background: rgba(255, 255, 255, 0.05); color: #aaa; border: 1px solid rgba(255,255,255,0.1); }
+.tag-popular { background: rgba(201, 168, 76, 0.1); color: var(--gold); border: 1px solid rgba(201, 168, 76, 0.2); }
+
+.mod-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.mod-grid.list-view .mod-footer {
+  padding-top: 0;
+  border-top: none;
+  flex-shrink: 0;
+}
+
+.mod-link {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.link-nexus {
+  background: rgba(224, 160, 48, 0.08);
+  border: 1px solid rgba(224, 160, 48, 0.2);
+  color: var(--amber);
+}
+
+.link-nexus:hover {
+  background: rgba(224, 160, 48, 0.18);
+  border-color: var(--amber);
+}
+
+.link-github {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ccc;
+}
+
+.link-github:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.copy-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  color: var(--text3);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.copy-btn:hover {
+  border-color: var(--purple-bright);
+  color: var(--purple-bright);
+  background: rgba(123, 47, 255, 0.1);
+}
+
+.copy-btn.copied {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(74, 200, 106, 0.1);
+}
+
+/* install order badge */
+.order-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(123, 47, 255, 0.2);
+  border: 1px solid rgba(123, 47, 255, 0.35);
+  color: var(--purple-bright);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════ INSTALL GUIDE */
+.install-section {
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 3.5rem 2rem;
+  margin: 0;
+}
+
+.install-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.install-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.install-steps::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--purple), var(--gold), transparent);
+}
+
+.install-step {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.25rem 0;
+  position: relative;
+}
+
+.step-num {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card2);
+  border: 2px solid var(--purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--purple-bright);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.step-content {
+  flex: 1;
+  padding-top: 0.6rem;
+}
+
+.step-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+.step-desc {
+  font-size: 0.88rem;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.step-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--purple-bright);
+  text-decoration: none;
+  margin-top: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(123, 47, 255, 0.08);
+  border: 1px solid rgba(123, 47, 255, 0.2);
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.step-link:hover {
+  background: rgba(123, 47, 255, 0.18);
+}
+
+/* ═══════════════════════════════════════ TOAST */
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--card2);
+  border: 1px solid var(--purple);
+  border-radius: 6px;
+  font-size: 0.88rem;
+  color: var(--text);
+  box-shadow: 0 8px 30px rgba(123, 47, 255, 0.25);
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+  max-width: 320px;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(40px); }
+}
+
+/* ═══════════════════════════════════════ FOOTER */
+footer {
+  padding: 3rem 2rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text3);
+  font-size: 0.85rem;
+}
+
+footer .footer-logo {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, var(--purple-bright), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+/* ═══════════════════════════════════════ HIDDEN */
+.mod-card[data-hidden="true"] {
+  display: none;
+}
+
+/* ═══════════════════════════════════════ SCROLLBAR */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--purple-dim); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--purple); }
+
+/* ═══════════════════════════════════════ RESPONSIVE */
+@media (max-width: 768px) {
+  nav { padding: 0.6rem 1rem; }
+  .nav-links { display: none; }
+  header { padding: 6rem 1.5rem 3rem; }
+  main { padding: 1.5rem; }
+  .filter-section { padding: 1rem 1.5rem; }
+  .stat-block { padding: 1rem 1.5rem; }
+  .hero-logo-wrap svg { width: 260px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<!-- ══════════ SEARCH OVERLAY ══════════ -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <input type="text" id="searchInput" placeholder="Search mods — type anything..." autofocus>
+    </div>
+    <div id="searchResults"></div>
+    <span class="search-close" id="searchClose">Press ESC to close</span>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">
+    <!-- Mini logo -->
+    <svg class="nav-logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="20,2 37,12 37,28 20,38 3,28 3,12" fill="none" stroke="url(#navGrad)" stroke-width="1.5"/>
+      <polygon points="20,8 31,14 31,26 20,32 9,26 9,14" fill="none" stroke="url(#navGrad)" stroke-width="0.8" opacity="0.5"/>
+      <text x="20" y="25" text-anchor="middle" font-family="serif" font-size="14" font-weight="bold" fill="url(#navGrad)">M</text>
+      <defs>
+        <linearGradient id="navGrad" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0%" stop-color="#a66fff"/>
+          <stop offset="100%" stop-color="#c9a84c"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <span class="nav-logo-text">MORPHEUS MODS</span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#foundation">⚙ Foundation</a></li>
+    <li><a href="#visual">✦ Visual</a></li>
+    <li><a href="#gameplay">⚔ Gameplay</a></li>
+    <li><a href="#classes">✦ Classes</a></li>
+    <li><a href="#content">📖 Content</a></li>
+    <li><a href="#qol">🖥 QoL</a></li>
+    <li><a href="#install">📋 Install Guide</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <button class="nav-search-btn" id="navSearchBtn">🔍 Search mods</button>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<header>
+
+  <!-- HERO LOGO SVG - Custom art -->
+  <div class="hero-logo-wrap">
+    <svg width="340" height="200" viewBox="0 0 340 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="goldGrad" x1="0" y1="0" x2="340" y2="200" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f0d080"/>
+          <stop offset="50%" stop-color="#c9a84c"/>
+          <stop offset="100%" stop-color="#a07030"/>
+        </linearGradient>
+        <linearGradient id="purpGrad" x1="0" y1="0" x2="340" y2="200" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a66fff"/>
+          <stop offset="100%" stop-color="#7b2fff"/>
+        </linearGradient>
+        <linearGradient id="glowGrad" x1="170" y1="0" x2="170" y2="200" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a66fff" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#7b2fff" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="coreGlow" cx="170" cy="100" r="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a66fff" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#7b2fff" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="glow">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+        <filter id="softglow">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+      </defs>
+
+      <!-- Ambient glow blob -->
+      <ellipse cx="170" cy="100" rx="130" ry="80" fill="url(#coreGlow)"/>
+
+      <!-- Outer ring -->
+      <polygon points="170,10 316,92 316,108 170,190 24,108 24,92" fill="none" stroke="url(#purpGrad)" stroke-width="1" opacity="0.4"/>
+      <!-- Inner ring -->
+      <polygon points="170,28 298,100 170,172 42,100" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" filter="url(#glow)"/>
+      <!-- Mid ring -->
+      <polygon points="170,42 280,100 170,158 60,100" fill="none" stroke="url(#purpGrad)" stroke-width="0.8" opacity="0.6"/>
+
+      <!-- Corner flourishes -->
+      <circle cx="170" cy="10" r="4" fill="url(#goldGrad)" filter="url(#glow)" opacity="0.8"/>
+      <circle cx="298" cy="100" r="4" fill="url(#goldGrad)" filter="url(#glow)" opacity="0.8"/>
+      <circle cx="170" cy="190" r="4" fill="url(#goldGrad)" filter="url(#glow)" opacity="0.8"/>
+      <circle cx="42" cy="100" r="4" fill="url(#goldGrad)" filter="url(#glow)" opacity="0.8"/>
+
+      <!-- Corner lines - top -->
+      <line x1="100" y1="12" x2="140" y2="12" stroke="url(#goldGrad)" stroke-width="1" opacity="0.5"/>
+      <line x1="200" y1="12" x2="240" y2="12" stroke="url(#goldGrad)" stroke-width="1" opacity="0.5"/>
+      <!-- Corner lines - sides -->
+      <line x1="26" y1="80" x2="26" y2="120" stroke="url(#goldGrad)" stroke-width="1" opacity="0.5"/>
+      <line x1="314" y1="80" x2="314" y2="120" stroke="url(#goldGrad)" stroke-width="1" opacity="0.5"/>
+
+      <!-- Eye of Morpheus - center symbol -->
+      <!-- Outer eye shape -->
+      <ellipse cx="170" cy="100" rx="38" ry="24" fill="none" stroke="url(#purpGrad)" stroke-width="1.5" filter="url(#glow)"/>
+      <!-- Pupil/iris -->
+      <circle cx="170" cy="100" r="16" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" filter="url(#glow)"/>
+      <circle cx="170" cy="100" r="9" fill="rgba(123,47,255,0.3)" stroke="url(#purpGrad)" stroke-width="1"/>
+      <circle cx="170" cy="100" r="4" fill="url(#purpGrad)" filter="url(#softglow)"/>
+      <!-- Eye highlight -->
+      <circle cx="165" cy="96" r="2" fill="white" opacity="0.6"/>
+      <!-- Eye lashes top -->
+      <line x1="170" y1="76" x2="170" y2="66" stroke="url(#purpGrad)" stroke-width="1.5" opacity="0.7"/>
+      <line x1="150" y1="82" x2="144" y2="74" stroke="url(#purpGrad)" stroke-width="1" opacity="0.5"/>
+      <line x1="190" y1="82" x2="196" y2="74" stroke="url(#purpGrad)" stroke-width="1" opacity="0.5"/>
+      <!-- Eye lashes bottom -->
+      <line x1="170" y1="124" x2="170" y2="134" stroke="url(#purpGrad)" stroke-width="1" opacity="0.5"/>
+
+      <!-- Small sparkles -->
+      <g filter="url(#glow)" opacity="0.9">
+        <line x1="85" y1="55" x2="85" y2="65" stroke="url(#goldGrad)" stroke-width="1.2"/>
+        <line x1="80" y1="60" x2="90" y2="60" stroke="url(#goldGrad)" stroke-width="1.2"/>
+        <line x1="255" y1="135" x2="255" y2="145" stroke="url(#goldGrad)" stroke-width="1.2"/>
+        <line x1="250" y1="140" x2="260" y2="140" stroke="url(#goldGrad)" stroke-width="1.2"/>
+        <line x1="255" y1="55" x2="255" y2="62" stroke="url(#purpGrad)" stroke-width="1"/>
+        <line x1="251" y1="58.5" x2="259" y2="58.5" stroke="url(#purpGrad)" stroke-width="1"/>
+        <line x1="85" y1="135" x2="85" y2="142" stroke="url(#purpGrad)" stroke-width="1"/>
+        <line x1="81" y1="138.5" x2="89" y2="138.5" stroke="url(#purpGrad)" stroke-width="1"/>
+      </g>
+
+      <!-- Text: MORPHEUS -->
+      <text x="170" y="24" text-anchor="middle" font-family="'Cinzel Decorative', serif" font-size="13.5" font-weight="900" fill="url(#purpGrad)" letter-spacing="5" filter="url(#glow)">MORPHEUS</text>
+      <!-- Text: MODS -->
+      <text x="170" y="183" text-anchor="middle" font-family="'Cinzel', serif" font-size="10" font-weight="700" fill="url(#goldGrad)" letter-spacing="8" opacity="0.9">MODS</text>
+
+      <!-- Subtitle arc text simulation with line -->
+      <line x1="100" y1="178" x2="140" y2="184" stroke="url(#goldGrad)" stroke-width="0.8" opacity="0.4"/>
+      <line x1="200" y1="184" x2="240" y2="178" stroke="url(#goldGrad)" stroke-width="0.8" opacity="0.4"/>
+
+      <!-- Animated shimmer line (done via CSS on svg) -->
+      <rect x="0" y="0" width="340" height="200" fill="none">
+        <animate attributeName="opacity" values="1;0.8;1" dur="4s" repeatCount="indefinite"/>
+      </rect>
+    </svg>
+  </div>
+
+  <div class="hero-eyeline">Baldur's Gate 3 — Patch 8 Verified</div>
+  <h1>Ultimate Mod Guide</h1>
+  <div class="hero-sub">For the Crew of the Black Bulls Den</div>
+  <p class="hero-desc">Hand-picked, tested, and curated by Morpheus. Every mod on this page works with BG3 Patch 8 — the final major update.</p>
+
+  <div class="hero-stats">
+    <div class="stat-block">
+      <span class="stat-num">32</span>
+      <span class="stat-label">Total Mods</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-num">6</span>
+      <span class="stat-label">Categories</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-num">P8</span>
+      <span class="stat-label">Patch Verified</span>
+    </div>
+    <div class="stat-block" id="statInstalled">
+      <span class="stat-num" id="statNum">0</span>
+      <span class="stat-label">Installed</span>
+    </div>
+  </div>
+
+  <div class="hero-badges">
+    <div class="badge badge-green"><span class="dot"></span>Patch 8 Compatible</div>
+    <div class="badge badge-purple">✦ Nexus Mods Verified</div>
+    <div class="badge badge-gold">⚜ Black Bulls Den Edition</div>
+  </div>
+</header>
+
+<!-- ══════════ CREW ══════════ -->
+<section class="crew-section">
+  <div class="section-eyeline">⚜ The Crew</div>
+  <div class="crew-cards">
+
+    <!-- MORPHEUS / NOAH -->
+    <div class="crew-card">
+      <svg class="crew-avatar" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="morGrad" x1="0" y1="0" x2="64" y2="64">
+            <stop offset="0%" stop-color="#a66fff"/>
+            <stop offset="100%" stop-color="#7b2fff"/>
+          </linearGradient>
+          <filter id="morGlow"><feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/><feComposite in="SourceGraphic" in2="b" operator="over"/></filter>
+        </defs>
+        <circle cx="32" cy="32" r="30" fill="rgba(123,47,255,0.15)" stroke="url(#morGrad)" stroke-width="1.5"/>
+        <!-- Eye of Morpheus -->
+        <ellipse cx="32" cy="32" rx="16" ry="10" fill="none" stroke="url(#morGrad)" stroke-width="1.3" filter="url(#morGlow)"/>
+        <circle cx="32" cy="32" r="6" fill="rgba(123,47,255,0.4)" stroke="url(#morGrad)" stroke-width="1"/>
+        <circle cx="32" cy="32" r="2.8" fill="url(#morGrad)" filter="url(#morGlow)"/>
+        <circle cx="30" cy="30.5" r="1.1" fill="white" opacity="0.5"/>
+        <!-- Crown spikes above eye -->
+        <line x1="32" y1="22" x2="32" y2="15" stroke="url(#morGrad)" stroke-width="1.3" filter="url(#morGlow)"/>
+        <line x1="23" y1="25" x2="19" y2="19" stroke="url(#morGrad)" stroke-width="1"/>
+        <line x1="41" y1="25" x2="45" y2="19" stroke="url(#morGrad)" stroke-width="1"/>
+        <circle cx="32" cy="14" r="2.2" fill="url(#morGrad)" filter="url(#morGlow)"/>
+        <circle cx="18" cy="18" r="1.5" fill="url(#morGrad)" opacity="0.7"/>
+        <circle cx="46" cy="18" r="1.5" fill="url(#morGrad)" opacity="0.7"/>
+        <!-- Small diamond accents sides -->
+        <polygon points="8,32 11,29 14,32 11,35" fill="url(#morGrad)" opacity="0.5"/>
+        <polygon points="56,32 53,29 50,32 53,35" fill="url(#morGrad)" opacity="0.5"/>
+      </svg>
+      <div class="crew-info">
+        <div class="crew-name">Morpheus</div>
+        <div class="crew-alias">Derick</div>
+        <div class="crew-role">Owner of The Black Bulls Den</div>
+      </div>
+    </div>
+
+    <!-- JOEBASEBALL / ALEX -->
+    <div class="crew-card">
+      <svg class="crew-avatar" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="joeGrad" x1="0" y1="0" x2="64" y2="64">
+            <stop offset="0%" stop-color="#f0d080"/>
+            <stop offset="100%" stop-color="#c9a84c"/>
+          </linearGradient>
+          <filter id="joeGlow"><feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/><feComposite in="SourceGraphic" in2="b" operator="over"/></filter>
+        </defs>
+        <circle cx="32" cy="32" r="30" fill="rgba(201,168,76,0.1)" stroke="url(#joeGrad)" stroke-width="1.5"/>
+        <!-- Baseball shape -->
+        <circle cx="32" cy="32" r="14" fill="none" stroke="url(#joeGrad)" stroke-width="1.2" opacity="0.6"/>
+        <!-- Classic baseball curved stitches left -->
+        <path d="M22 24 Q18 32 22 40" fill="none" stroke="url(#joeGrad)" stroke-width="1.5" filter="url(#joeGlow)"/>
+        <!-- Tick marks left -->
+        <line x1="22" y1="26" x2="25.5" y2="27.5" stroke="url(#joeGrad)" stroke-width="1"/>
+        <line x1="21" y1="30" x2="24.5" y2="31" stroke="url(#joeGrad)" stroke-width="1"/>
+        <line x1="22" y1="34.5" x2="25.5" y2="33" stroke="url(#joeGrad)" stroke-width="1"/>
+        <line x1="22" y1="38.5" x2="25.5" y2="37" stroke="url(#joeGrad)" stroke-width="1"/>
+        <!-- Classic baseball curved stitches right -->
+        <path d="M42 24 Q46 32 42 40" fill="none" stroke="url(#joeGrad)" stroke-width="1.5" filter="url(#joeGlow)"/>
+        <!-- Tick marks right -->
+        <line x1="42" y1="26" x2="38.5" y2="27.5" stroke="url(#joeGrad)" stroke-width="1"/>
+        <line x1="43" y1="30" x2="39.5" y2="31" stroke="url(#joeGrad)" stroke-width="1"/>
+        <line x1="42" y1="34.5" x2="38.5" y2="33" stroke="url(#joeGrad)" stroke-width="1"/>
+        <line x1="42" y1="38.5" x2="38.5" y2="37" stroke="url(#joeGrad)" stroke-width="1"/>
+        <!-- Center diamond (home plate shape) -->
+        <polygon points="32,22 38,28 32,34 26,28" fill="rgba(201,168,76,0.15)" stroke="url(#joeGrad)" stroke-width="1" filter="url(#joeGlow)"/>
+        <circle cx="32" cy="28" r="2.5" fill="url(#joeGrad)" filter="url(#joeGlow)"/>
+      </svg>
+      <div class="crew-info">
+        <div class="crew-name">joebaseball</div>
+        <div class="crew-alias">Alex</div>
+        <div class="crew-role">Owner of Joe Baseball's Diamond</div>
+      </div>
+    </div>
+
+    <!-- NOWA -->
+    <div class="crew-card">
+      <svg class="crew-avatar" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="nowaGrad" x1="0" y1="0" x2="64" y2="64">
+            <stop offset="0%" stop-color="#4ac86a"/>
+            <stop offset="100%" stop-color="#12b89a"/>
+          </linearGradient>
+          <filter id="nowaGlow"><feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/><feComposite in="SourceGraphic" in2="b" operator="over"/></filter>
+        </defs>
+        <circle cx="32" cy="32" r="30" fill="rgba(18,184,154,0.1)" stroke="url(#nowaGrad)" stroke-width="1.5"/>
+        <!-- Rooster/Cawk motif - stylized bird silhouette -->
+        <!-- Body -->
+        <ellipse cx="32" cy="36" rx="10" ry="8" fill="rgba(74,200,106,0.15)" stroke="url(#nowaGrad)" stroke-width="1.2"/>
+        <!-- Tail feathers -->
+        <path d="M42 34 Q50 28 48 22 Q44 26 42 30" fill="rgba(18,184,154,0.2)" stroke="url(#nowaGrad)" stroke-width="1"/>
+        <path d="M42 37 Q52 34 52 28 Q47 32 42 36" fill="rgba(18,184,154,0.15)" stroke="url(#nowaGrad)" stroke-width="0.9" opacity="0.8"/>
+        <!-- Head -->
+        <circle cx="24" cy="26" r="7" fill="rgba(74,200,106,0.2)" stroke="url(#nowaGrad)" stroke-width="1.2"/>
+        <!-- Comb (3 spikes on top) -->
+        <path d="M20 20 L19 13 L22 19" fill="rgba(74,200,106,0.4)" stroke="url(#nowaGrad)" stroke-width="1"/>
+        <path d="M24 19 L24 12 L26 19" fill="rgba(74,200,106,0.5)" stroke="url(#nowaGrad)" stroke-width="1.1" filter="url(#nowaGlow)"/>
+        <path d="M28 20 L29 13 L30 20" fill="rgba(74,200,106,0.4)" stroke="url(#nowaGrad)" stroke-width="1"/>
+        <!-- Wattle under beak -->
+        <path d="M20 28 Q18 32 20 34" fill="rgba(18,184,154,0.3)" stroke="url(#nowaGrad)" stroke-width="0.9"/>
+        <!-- Eye -->
+        <circle cx="22" cy="25" r="2" fill="url(#nowaGrad)" filter="url(#nowaGlow)"/>
+        <circle cx="21.3" cy="24.3" r="0.7" fill="white" opacity="0.6"/>
+        <!-- Beak -->
+        <path d="M17 26 L13 28 L17 29" fill="url(#nowaGrad)" opacity="0.8"/>
+        <!-- Wing detail -->
+        <path d="M24 34 Q30 30 38 33" fill="none" stroke="url(#nowaGrad)" stroke-width="0.9" opacity="0.7"/>
+        <path d="M24 37 Q30 33 37 36" fill="none" stroke="url(#nowaGrad)" stroke-width="0.9" opacity="0.5"/>
+        <!-- Feet -->
+        <line x1="27" y1="44" x2="25" y2="50" stroke="url(#nowaGrad)" stroke-width="1"/>
+        <line x1="25" y1="50" x2="22" y2="52" stroke="url(#nowaGrad)" stroke-width="1"/>
+        <line x1="25" y1="50" x2="25" y2="53" stroke="url(#nowaGrad)" stroke-width="1"/>
+        <line x1="25" y1="50" x2="28" y2="52" stroke="url(#nowaGrad)" stroke-width="1"/>
+        <line x1="35" y1="44" x2="37" y2="50" stroke="url(#nowaGrad)" stroke-width="1"/>
+        <line x1="37" y1="50" x2="34" y2="52" stroke="url(#nowaGrad)" stroke-width="1"/>
+        <line x1="37" y1="50" x2="37" y2="53" stroke="url(#nowaGrad)" stroke-width="1"/>
+        <line x1="37" y1="50" x2="40" y2="52" stroke="url(#nowaGrad)" stroke-width="1"/>
+      </svg>
+      <div class="crew-info">
+        <div class="crew-name">Nowa</div>
+        <div class="crew-alias">Nowa</div>
+        <div class="crew-role">Owner of Cawk</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════ TRACKER ══════════ -->
+<section class="tracker-section">
+  <div class="section-eyeline">📋 Install Tracker</div>
+  <div class="tracker-bar-wrap">
+    <div class="tracker-header">
+      <div class="tracker-title">INSTALLATION PROGRESS</div>
+      <div class="tracker-count"><span id="installedCount">0</span> / <span id="totalCount">32</span> mods installed</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div style="font-size:0.82rem; color:var(--text3); font-style:italic;">Click the ◎ circle on any mod card to mark it as installed. Your progress saves automatically.</div>
+    <div class="tracker-actions">
+      <button class="btn btn-gold" onclick="exportList()">⬇ Export Install List</button>
+      <button class="btn btn-purple" onclick="copyAllLinks()">🔗 Copy All Links</button>
+      <button class="btn btn-danger" onclick="resetInstalls()">↺ Reset Progress</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FILTERS ══════════ -->
+<div class="filter-section">
+  <span class="filter-label">Filter:</span>
+  <button class="filter-btn active" data-filter="all" onclick="filterMods(this)">All Mods</button>
+  <button class="filter-btn" data-filter="foundation" onclick="filterMods(this)">⚙ Foundation</button>
+  <button class="filter-btn" data-filter="visual" onclick="filterMods(this)">✦ Visual</button>
+  <button class="filter-btn" data-filter="gameplay" onclick="filterMods(this)">⚔ Gameplay</button>
+  <button class="filter-btn" data-filter="classes" onclick="filterMods(this)">✦ Classes</button>
+  <button class="filter-btn" data-filter="content" onclick="filterMods(this)">📖 Content</button>
+  <button class="filter-btn" data-filter="qol" onclick="filterMods(this)">🖥 QoL</button>
+  <button class="filter-btn" data-filter="installed" onclick="filterMods(this)">✓ Installed</button>
+  <button class="filter-btn" data-filter="console" onclick="filterMods(this)">🎮 Console OK</button>
+  <div class="filter-right">
+    <div class="view-toggle">
+      <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid View">⊞</button>
+      <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="List View">☰</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODS ══════════ -->
+<main id="modMain">
+
+<!-- ─── FOUNDATION ─── -->
+<section class="category-section cat-foundation" id="foundation">
+  <div class="category-header">
+    <div class="category-icon">⚙</div>
+    <div class="category-title">
+      <h2>Foundation Tools</h2>
+      <p>Install these first — everything else depends on them</p>
+    </div>
+    <div class="category-count">5 mods</div>
+  </div>
+  <div class="mod-grid" id="grid-foundation">
+
+    <div class="mod-card" data-cat="foundation" data-id="bg3modmanager" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+              <span class="order-badge">1</span>
+              <span class="mod-name">BG3 Mod Manager</span>
+            </div>
+            <div class="mod-tags"><span class="tag tag-required">Required First</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">The only official BG3 mod manager. Organizes load order, installs paks, exports to game. Absolutely mandatory — install this before anything else.</p>
+        <div class="mod-footer">
+          <a href="https://github.com/LaughingLeader/BG3ModManager/releases" target="_blank" class="mod-link link-github">⎆ GitHub</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://github.com/LaughingLeader/BG3ModManager/releases')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="foundation" data-id="scriptextender" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+              <span class="order-badge">2</span>
+              <span class="mod-name">Norbyte's Script Extender</span>
+            </div>
+            <div class="mod-tags"><span class="tag tag-required">Required</span><span class="tag tag-script">SE</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Extends BG3's scripting capabilities. Required by most major mods. Install via BG3MM → Tools → Download Script Extender. Auto-updates. Only download from Norbyte's GitHub — never from Nexus.</p>
+        <div class="mod-footer">
+          <a href="https://github.com/Norbyte/bg3se/releases" target="_blank" class="mod-link link-github">⎆ GitHub</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://github.com/Norbyte/bg3se/releases')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="foundation" data-id="modfixer" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+              <span class="order-badge">3</span>
+              <span class="mod-name">Mod Fixer</span>
+            </div>
+            <div class="mod-tags"><span class="tag tag-required">Required</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Prevents crash-on-load issues when running multiple mods. Patches PAK file compatibility. Still useful post-Patch 7 as a safeguard.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/141" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/141')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="foundation" data-id="nativemodloader" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+              <span class="order-badge">4</span>
+              <span class="mod-name">Native Mod Loader</span>
+            </div>
+            <div class="mod-tags"><span class="tag tag-required">Required by some</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Foundation layer for loose-file mods. Required by Achievement Enabler and several camera/UI mods. Loads before game starts for seamless injection.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/944" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/944')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="foundation" data-id="achievementenab" data-tags="console">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+              <span class="order-badge">5</span>
+              <span class="mod-name">Achievement Enabler</span>
+            </div>
+            <div class="mod-tags"><span class="tag tag-console">Console OK</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Re-enables Steam & GOG achievements while using mods. BG3 normally disables achievements when mods are active. Keep hunting those 100% completions.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/668" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/668')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end grid-foundation -->
+</section>
+
+<!-- ─── VISUAL ─── -->
+<section class="category-section cat-visual" id="visual">
+  <div class="category-header">
+    <div class="category-icon">✦</div>
+    <div class="category-title">
+      <h2>Visual & Appearance</h2>
+      <p>Character creation, cosmetics, and graphical enhancements</p>
+    </div>
+    <div class="category-count">6 mods</div>
+  </div>
+  <div class="mod-grid" id="grid-visual">
+
+    <div class="mod-card" data-cat="visual" data-id="tavshair" data-tags="console popular">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Tav's Hair Salon</span>
+            <div class="mod-tags"><span class="tag tag-popular">3M+ Downloads</span><span class="tag tag-console">Console OK</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">178 unique hairstyles added to character creation. The most downloaded cosmetic mod on Nexus. Essential for anyone who cares about their Tav's look.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/213" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/213')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="visual" data-id="overhauldapp" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Overhauled Appearance Interface</span>
+            <div class="mod-tags"><span class="tag tag-script">Needs SE</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Massively enhanced character creator. More options, streamlined UI layout, expanded customization per race. Makes designing your perfect Tav actually enjoyable.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/17443" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/17443')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="visual" data-id="transmogrev" data-tags="console">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Transmog Enhanced Revamped</span>
+            <div class="mod-tags"><span class="tag tag-console">Console OK</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Transfer item stats to any armor cosmetically. Best stats + best look, combined. Works with modded items too. Fixed and maintained post-Patch 8.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/20407" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/20407')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="visual" data-id="textureup" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Texture Upscale</span>
+            <div class="mod-tags"></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Fixes the persistent blurry texture problem that plagues BG3 even on Ultra settings. AI-upscaled to 4x resolution. Noticeable improvement especially in close-up scenes.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/12402" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/12402')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="visual" data-id="skybound" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Skybound Wings</span>
+            <div class="mod-tags"><span class="tag tag-script">Needs SE</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Adds custom animated wings to Dragonborn and other winged race characters. Multiple wing styles with proper animations. Makes Dragonborn actually feel majestic.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/14473" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/14473')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="visual" data-id="basketequip" data-tags="console popular">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Basket Full of Equipment</span>
+            <div class="mod-tags"><span class="tag tag-popular">Popular</span><span class="tag tag-console">Console OK</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">700+ new armor pieces, clothes, and accessories added for cosmetic variety. Pure cosmetics, no stat bloat. Huge wardrobe expansion for roleplay-focused builds.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/97" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/97')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── GAMEPLAY ─── -->
+<section class="category-section cat-gameplay" id="gameplay">
+  <div class="category-header">
+    <div class="category-icon">⚔</div>
+    <div class="category-title">
+      <h2>Gameplay & Freedom</h2>
+      <p>Expand what you can do and how you play</p>
+    </div>
+    <div class="category-count">9 mods</div>
+  </div>
+  <div class="mod-grid" id="grid-gameplay">
+
+    <div class="mod-card" data-cat="gameplay" data-id="partylimit" data-tags="console popular">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Party Limit Begone</span>
+            <div class="mod-tags"><span class="tag tag-popular">Popular</span><span class="tag tag-console">Console OK</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Up to 16 party members in singleplayer, 8 in multiplayer. Bring every companion at once. Perfect for chaos runs or experiencing all companion reactions to everything.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/327" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/327')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="gameplay" data-id="wasd" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">WASD Character Movement</span>
+            <div class="mod-tags"><span class="tag tag-script">Needs SE</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Full WASD keyboard movement with optional third-person camera. Completely changes how BG3 feels to play. Configurable via BG3WASD.toml. Press F11 to reload config in-game.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/781" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/781')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="gameplay" data-id="nativecam" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Native Camera Tweaks</span>
+            <div class="mod-tags"><span class="tag tag-script">Needs SE</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Unlocks camera pitch, extends zoom range, configures deadzone. Makes screenshot mode and cinematic gameplay actually viable. Pairs perfectly with WASD mod.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/945" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/945')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="gameplay" data-id="carryweight" data-tags="console">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Carry Weight Increased</span>
+            <div class="mod-tags"><span class="tag tag-console">Console OK</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Options from 1.5x to 9000x carry capacity. Never leave loot behind again. Pick the multiplier that suits you — most players prefer 4x for a balanced experience.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/522" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/522')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="gameplay" data-id="trialsoftav" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Trials of Tav Reloaded</span>
+            <div class="mod-tags"><span class="tag tag-script">Needs SE</span><span class="tag tag-newsave">New Save</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Complete roguelike mode built into BG3. 200+ enemies, 80 maps, wave survival mechanics, custom bosses. Massive endgame content for when the campaign isn't enough.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/9907" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/9907')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="gameplay" data-id="hugcomp" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Hug Your Companions</span>
+            <div class="mod-tags"></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Adds a platonic embrace option with companions. Context-aware dialogue triggers unique voice responses per companion. Surprisingly well-implemented and immersive.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/9994" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/9994')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="gameplay" data-id="scratch" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Scratch Dog Training</span>
+            <div class="mod-tags"></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Gives Scratch the camp dog actual combat abilities and makes him a useful companion. Good boy now earns his keep. Great for roleplay and dog lovers.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/10035" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/10035')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="gameplay" data-id="manymonsters" data-tags="newsave">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Many More Monsters</span>
+            <div class="mod-tags"><span class="tag tag-newsave">New Save Required</span><span class="tag tag-popular">Popular</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">100+ new combat encounters across all 3 acts. Random spawns, scripted fights, powerful minibosses — all lore-friendly. Best used with Level 13-20 for the full XP gain.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/11639" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/11639')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="gameplay" data-id="cheater" data-tags="github">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Cheater's Spell Scroll</span>
+            <div class="mod-tags"><span class="tag tag-github">GitHub</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Toggle passives on and off freely, access powerful cheat-level spells for testing builds. Useful for theorycrafting or experimenting without starting new saves.</p>
+        <div class="mod-footer">
+          <a href="https://github.com/Xelphos/Cheaters-Spell-Scroll" target="_blank" class="mod-link link-github">⎆ GitHub</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://github.com/Xelphos/Cheaters-Spell-Scroll')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── CLASSES ─── -->
+<section class="category-section cat-classes" id="classes">
+  <div class="category-header">
+    <div class="category-icon">✦</div>
+    <div class="category-title">
+      <h2>Leveling, Spells & Classes</h2>
+      <p>Expand the D&D ruleset to its fullest potential</p>
+    </div>
+    <div class="category-count">3 mods</div>
+  </div>
+  <div class="mod-grid" id="grid-classes">
+
+    <div class="mod-card" data-cat="classes" data-id="5espells" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">5e Spells</span>
+            <div class="mod-tags"><span class="tag tag-script">Needs SE</span><span class="tag tag-popular">Popular</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Dozens of missing D&D 5e spells added for every class — levels 1–9 plus cantrips. Playfully customizable. Pairs perfectly with Level 13-20 expansion for full tabletop feel.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/125" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/125')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="classes" data-id="level1320" data-tags="newsave">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Expansion Level 13–20</span>
+            <div class="mod-tags"><span class="tag tag-script">Needs SE</span><span class="tag tag-newsave">New Save</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Full D&D level progression to 20. ASI at levels 16 and 19. Works with 5e Spells and Many More Monsters for a complete high-level campaign experience. The definitive way to play BG3.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/279" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/279')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="classes" data-id="mindweaver" data-tags="newsave">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Mind Weaver</span>
+            <div class="mod-tags"><span class="tag tag-script">Needs SE</span><span class="tag tag-newsave">New Save</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Entirely new psionic class using astral plane energy. 90% unique spells and passives distinct from all base classes. Fully balanced to match vanilla power levels. Feels like a genuine Larian class.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/10431" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/10431')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── CONTENT ─── -->
+<section class="category-section cat-content" id="content">
+  <div class="category-header">
+    <div class="category-icon">📖</div>
+    <div class="category-title">
+      <h2>Races & Story Content</h2>
+      <p>New playable races and story/companion expansions</p>
+    </div>
+    <div class="category-count">4 mods</div>
+  </div>
+  <div class="mod-grid" id="grid-content">
+
+    <div class="mod-card" data-cat="content" data-id="fantasticalmulti" data-tags="newsave popular">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Fantastical Multiverse</span>
+            <div class="mod-tags"><span class="tag tag-popular">Popular</span><span class="tag tag-newsave">New Save</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">54 playable races drawn from multiple D&D settings — Eberron, Ravnica, Spelljammer, and more. Perfect for tabletop fans who want their actual campaign race in BG3.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/215" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/215')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="content" data-id="campovh" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Camp Event Overhaul</span>
+            <div class="mod-tags"><span class="tag tag-script">Needs SE</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Fixes broken companion event triggers to ensure rare scenes actually play. Many companion interactions are gated behind overly strict conditions — this mod unlocks them.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/17753" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/17753')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="content" data-id="wandsweave" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Wands and Weave</span>
+            <div class="mod-tags"></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Adds 10 unique wizard-themed items per act — staves, wands, tomes, and accessories. Designed for arcane class enjoyers. Lore-friendly visual design.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/13829" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/13829')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="content" data-id="karlach" data-tags="newsave">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Recruit Karlach Earlier</span>
+            <div class="mod-tags"><span class="tag tag-newsave">New Save Required</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Places Karlach at the beach right at game start. Unlocks unique early dialogue and unused voice lines never accessible in vanilla. For Karlach fans only — but that's most of us.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/18255" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/18255')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── QOL ─── -->
+<section class="category-section cat-qol" id="qol">
+  <div class="category-header">
+    <div class="category-icon">🖥</div>
+    <div class="category-title">
+      <h2>Quality of Life & UI</h2>
+      <p>Make the interface work for you, not against you</p>
+    </div>
+    <div class="category-count">5 mods</div>
+  </div>
+  <div class="mod-grid" id="grid-qol">
+
+    <div class="mod-card" data-cat="qol" data-id="improvedui" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">ImprovedUI</span>
+            <div class="mod-tags"><span class="tag tag-popular">Essential</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Resizable inventory panels, removes intrusive mod error popups, unlocks appearance editing for Origin characters. The UI overhaul Larian should have shipped. Load early in order.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/366" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/366')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="qol" data-id="betterinv" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Better Inventory UI</span>
+            <div class="mod-tags"></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Color-coded item background by rarity. Instantly see legendary vs common loot. Small mod, huge quality-of-life improvement — especially in heavy loot runs.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/4597" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/4597')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="qol" data-id="highlightall" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Highlight Everything Tooltip</span>
+            <div class="mod-tags"></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Alt key now highlights ALL interactable objects in the environment — not just the basics. Never miss a hidden chest or secret door again. Essential for completionists.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/1493" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/1493')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="qol" data-id="campnotif" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Camp Event Notifications</span>
+            <div class="mod-tags"></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Floating exclamation point appears over your character when a camp night event is queued. Never accidentally skip a companion scene or romance moment again. Critical for first-timers.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/1879" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/1879')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-cat="qol" data-id="waypoints" data-tags="">
+      <div class="mod-card-accent"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-top">
+          <div>
+            <span class="mod-name">Waypoints Expanded</span>
+            <div class="mod-tags"><span class="tag tag-script">Needs SE</span></div>
+          </div>
+          <button class="mod-install-btn" onclick="toggleInstall(this)" title="Mark as installed">◎</button>
+        </div>
+        <p class="mod-desc">Adds 5 new fast travel waypoints in underserved areas of the map. Reduces backtracking significantly especially in Act 2 and 3. Check mod page for Patch 8 compatibility status.</p>
+        <div class="mod-footer">
+          <a href="https://www.nexusmods.com/baldursgate3/mods/17050" target="_blank" class="mod-link link-nexus">↗ Nexus Mods</a>
+          <button class="copy-btn" onclick="copyLink(this,'https://www.nexusmods.com/baldursgate3/mods/17050')" title="Copy link">⎘</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════ INSTALL GUIDE ══════════ -->
+<section class="install-section" id="install">
+  <div class="install-inner">
+    <div class="section-eyeline">📋 Install Guide</div>
+    <h2 style="font-family:'Cinzel',serif; font-size:1.5rem; color:var(--text); margin-bottom:0.5rem;">How to Install — Step by Step</h2>
+    <p style="color:var(--text2); font-size:0.9rem; margin-bottom:2.5rem; font-style:italic;">Follow this order exactly. Skipping steps causes crashes.</p>
+    <div class="install-steps">
+      <div class="install-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Download BG3 Mod Manager</div>
+          <div class="step-desc">Download and extract BG3ModManager to a non-protected folder (not Program Files). Run BG3ModManager.exe — it will auto-detect your game path. Run the game once first so folders get created.</div>
+          <a href="https://github.com/LaughingLeader/BG3ModManager/releases" target="_blank" class="step-link">↗ LaughingLeader / GitHub</a>
+        </div>
+      </div>
+      <div class="install-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Install Script Extender via BG3MM</div>
+          <div class="step-desc">In BG3MM, go to Tools → Download & Install Script Extender. DO NOT download SE from Nexus — that's an unofficial reupload. Only use Norbyte's GitHub. After install, launch the game once so SE fully installs. Look for "Script Extender version XX loaded" in the main menu bottom-left.</div>
+          <a href="https://github.com/Norbyte/bg3se/releases" target="_blank" class="step-link">↗ Norbyte / GitHub</a>
+        </div>
+      </div>
+      <div class="install-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Download Mods from Nexus / GitHub</div>
+          <div class="step-desc">Go to each mod page. Click Manual Download → Slow Download (free). Save the .zip or .pak file. Do NOT use Vortex Mod Manager — BG3MM is far more reliable for BG3.</div>
+        </div>
+      </div>
+      <div class="install-step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Drag .pak Files into BG3MM</div>
+          <div class="step-desc">Drag downloaded zip files directly into the BG3MM window. A green bar at the bottom confirms successful upload. Move mods from "Inactive" to "Active" column (leave DiceSet_06 and Honour mods out).</div>
+        </div>
+      </div>
+      <div class="install-step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Set Load Order — Foundation First</div>
+          <div class="step-desc">In active mods, order matters. Load order: (1) Mod Fixer, (2) Native Mod Loader, (3) ImprovedUI, (4) Script Extender mods, (5) Content/gameplay mods, (6) Visual mods last.</div>
+        </div>
+      </div>
+      <div class="install-step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-title">Export to Game and Launch</div>
+          <div class="step-desc">Click "Export Order to Game" (first export button) or File → Export Order to Game. Then launch BG3 from BG3MM. Verify Script Extender shows in the menu. New save recommended for mods marked New Save Required.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <span class="footer-logo">MORPHEUS MODS</span>
+  <p style="margin-bottom:0.5rem;">Built for the Black Bulls Den crew — Morpheus (Derick), joebaseball (Alex) & Nowa</p>
+  <p style="color:var(--text3); font-size:0.78rem;">BG3 Patch 8 · February 2026 · All links verified · Not affiliated with Larian Studios or Nexus Mods</p>
+</footer>
+
+<!-- ══════════ TOAST ══════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════ CANVAS BG
+(function() {
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], stars = [];
+  
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  
+  function initStars() {
+    stars = [];
+    for (let i = 0; i < 180; i++) {
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.2,
+        a: Math.random(),
+        spd: 0.001 + Math.random() * 0.003
+      });
+    }
+  }
+  
+  function initParticles() {
+    particles = [];
+    for (let i = 0; i < 25; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: 1 + Math.random() * 2.5,
+        a: 0.3 + Math.random() * 0.5,
+        color: Math.random() > 0.5 ? [123, 47, 255] : [201, 168, 76]
+      });
+    }
+  }
+  
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.005;
+    
+    // Stars
+    stars.forEach(s => {
+      s.a += s.spd;
+      const alpha = (Math.sin(s.a) * 0.5 + 0.5) * 0.7;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      ctx.fill();
+    });
+    
+    // Floating particles
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+      
+      const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 10);
+      grd.addColorStop(0, `rgba(${p.color[0]},${p.color[1]},${p.color[2]},${p.a * 0.5})`);
+      grd.addColorStop(1, `rgba(${p.color[0]},${p.color[1]},${p.color[2]},0)`);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * 10, 0, Math.PI*2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    });
+    
+    // Subtle scanning line
+    const scanY = (t * 80) % H;
+    const scanGrd = ctx.createLinearGradient(0, scanY - 60, 0, scanY + 60);
+    scanGrd.addColorStop(0, 'rgba(123,47,255,0)');
+    scanGrd.addColorStop(0.5, 'rgba(123,47,255,0.015)');
+    scanGrd.addColorStop(1, 'rgba(123,47,255,0)');
+    ctx.fillStyle = scanGrd;
+    ctx.fillRect(0, scanY - 60, W, 120);
+    
+    requestAnimationFrame(draw);
+  }
+  
+  resize();
+  initStars();
+  initParticles();
+  draw();
+  window.addEventListener('resize', () => { resize(); initStars(); initParticles(); });
+})();
+
+// ═══════════════════════════════════════════════════════ INSTALL TRACKER
+const STORAGE_KEY = 'morpheus-bg3-installs';
+
+function getInstalled() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+
+function saveInstalled(obj) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+}
+
+function updateTracker() {
+  const cards = document.querySelectorAll('.mod-card');
+  const total = cards.length;
+  const installed = getInstalled();
+  const count = Object.values(installed).filter(Boolean).length;
+  
+  document.getElementById('installedCount').textContent = count;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('statNum').textContent = count;
+  const pct = total > 0 ? (count / total) * 100 : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function toggleInstall(btn) {
+  const card = btn.closest('.mod-card');
+  const id = card.dataset.id;
+  const installed = getInstalled();
+  
+  if (installed[id]) {
+    installed[id] = false;
+    card.classList.remove('installed');
+    btn.textContent = '◎';
+    btn.title = 'Mark as installed';
+    toast('◻ Unmarked as installed');
+  } else {
+    installed[id] = true;
+    card.classList.add('installed');
+    btn.textContent = '✓';
+    btn.title = 'Installed!';
+    toast('✓ Marked as installed!');
+  }
+  
+  saveInstalled(installed);
+  updateTracker();
+}
+
+function loadInstallState() {
+  const installed = getInstalled();
+  document.querySelectorAll('.mod-card').forEach(card => {
+    const id = card.dataset.id;
+    if (installed[id]) {
+      card.classList.add('installed');
+      const btn = card.querySelector('.mod-install-btn');
+      if (btn) { btn.textContent = '✓'; btn.title = 'Installed!'; }
+    }
+  });
+  updateTracker();
+}
+
+function resetInstalls() {
+  if (!confirm('Reset all install progress? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  document.querySelectorAll('.mod-card').forEach(card => {
+    card.classList.remove('installed');
+    const btn = card.querySelector('.mod-install-btn');
+    if (btn) { btn.textContent = '◎'; btn.title = 'Mark as installed'; }
+  });
+  updateTracker();
+  toast('↺ Progress reset');
+}
+
+// ═══════════════════════════════════════════════════════ EXPORT LIST
+function exportList() {
+  const installed = getInstalled();
+  const cards = document.querySelectorAll('.mod-card');
+  let text = '=== MORPHEUS MODS — BG3 Install List ===\nBlack Bulls Den Edition · Patch 8\n\n';
+  let grouped = {};
+  
+  cards.forEach(card => {
+    const id = card.dataset.id;
+    const cat = card.dataset.cat;
+    const name = card.querySelector('.mod-name').textContent;
+    const link = card.querySelector('.mod-link')?.href || '';
+    const chk = installed[id] ? '[✓]' : '[ ]';
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(`${chk} ${name}\n    ${link}`);
+  });
+  
+  const catNames = {foundation:'FOUNDATION TOOLS', visual:'VISUAL & APPEARANCE', gameplay:'GAMEPLAY & FREEDOM', classes:'LEVELING, SPELLS & CLASSES', content:'RACES & CONTENT', qol:'QUALITY OF LIFE'};
+  Object.entries(grouped).forEach(([cat, mods]) => {
+    text += `\n── ${catNames[cat] || cat.toUpperCase()} ──\n`;
+    mods.forEach(m => text += m + '\n');
+  });
+  
+  const installed_count = Object.values(installed).filter(Boolean).length;
+  text += `\n\nProgress: ${installed_count} / ${cards.length} installed`;
+  
+  const blob = new Blob([text], {type: 'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'morpheus-bg3-mods.txt';
+  a.click();
+  toast('⬇ Download started!');
+}
+
+// ═══════════════════════════════════════════════════════ COPY ALL LINKS
+function copyAllLinks() {
+  const links = [];
+  document.querySelectorAll('.mod-card').forEach(card => {
+    const name = card.querySelector('.mod-name').textContent;
+    const link = card.querySelector('.mod-link')?.href || '';
+    links.push(`${name}: ${link}`);
+  });
+  navigator.clipboard.writeText(links.join('\n')).then(() => toast('🔗 All links copied to clipboard!'));
+}
+
+// ═══════════════════════════════════════════════════════ COPY SINGLE
+function copyLink(btn, url) {
+  navigator.clipboard.writeText(url).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘'; }, 2000);
+    toast('⎘ Link copied!');
+  });
+}
+
+// ═══════════════════════════════════════════════════════ FILTER
+let currentFilter = 'all';
+
+function filterMods(btn) {
+  currentFilter = btn.dataset.filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  
+  const installed = getInstalled();
+  document.querySelectorAll('.mod-card').forEach(card => {
+    let show = true;
+    if (currentFilter === 'all') show = true;
+    else if (currentFilter === 'installed') show = !!installed[card.dataset.id];
+    else if (currentFilter === 'console') show = card.dataset.tags.includes('console');
+    else show = card.dataset.cat === currentFilter;
+    card.dataset.hidden = show ? 'false' : 'true';
+  });
+  
+  // Show/hide category sections based on filter
+  document.querySelectorAll('.category-section').forEach(sec => {
+    if (currentFilter === 'all' || currentFilter === 'installed' || currentFilter === 'console') {
+      sec.style.display = '';
+    } else {
+      sec.style.display = sec.classList.contains('cat-' + currentFilter) ? '' : 'none';
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════ VIEW TOGGLE
+function setView(view) {
+  document.querySelectorAll('.mod-grid').forEach(grid => {
+    grid.classList.toggle('list-view', view === 'list');
+  });
+  document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+  document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
+}
+
+// ═══════════════════════════════════════════════════════ SEARCH
+const MOD_DATA = [];
+
+function buildSearchIndex() {
+  document.querySelectorAll('.mod-card').forEach(card => {
+    MOD_DATA.push({
+      id: card.dataset.id,
+      cat: card.dataset.cat,
+      name: card.querySelector('.mod-name').textContent,
+      desc: card.querySelector('.mod-desc').textContent,
+      link: card.querySelector('.mod-link')?.href || '',
+      card: card
+    });
+  });
+}
+
+document.getElementById('navSearchBtn').addEventListener('click', openSearch);
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+  if (e.key === 'Escape') closeSearch();
+});
+document.getElementById('searchClose').addEventListener('click', closeSearch);
+document.getElementById('searchOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('searchOverlay')) closeSearch();
+});
+
+function openSearch() {
+  document.getElementById('searchOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('searchInput').focus(), 50);
+}
+
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchResults').innerHTML = '';
+}
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  const res = document.getElementById('searchResults');
+  
+  if (!q) { res.innerHTML = ''; return; }
+  
+  const matches = MOD_DATA.filter(m =>
+    m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q) || m.cat.includes(q)
+  ).slice(0, 8);
+  
+  if (!matches.length) {
+    res.innerHTML = '<div style="color:var(--text3);text-align:center;padding:1.5rem;font-style:italic;">No mods found. Try different keywords.</div>';
+    return;
+  }
+  
+  const catLabels = {foundation:'Foundation', visual:'Visual', gameplay:'Gameplay', classes:'Classes', content:'Content', qol:'QoL'};
+  res.innerHTML = matches.map(m => `
+    <a class="search-result-item" href="#${m.cat}" onclick="closeSearch()">
+      <span class="search-result-cat">${catLabels[m.cat] || m.cat}</span>
+      <span class="search-result-name">${m.name}</span>
+      <span class="search-result-desc">${m.desc.substring(0, 80)}…</span>
+    </a>
+  `).join('');
+});
+
+// ═══════════════════════════════════════════════════════ TOAST
+function toast(msg) {
+  const container = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+// ═══════════════════════════════════════════════════════ NAV SCROLL
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  nav.style.background = window.scrollY > 40 
+    ? 'rgba(4,3,10,0.97)' 
+    : 'rgba(4,3,10,0.85)';
+});
+
+// ═══════════════════════════════════════════════════════ INIT
+document.addEventListener('DOMContentLoaded', () => {
+  buildSearchIndex();
+  loadInstallState();
+});
+</script>
+</body>
+</html>
